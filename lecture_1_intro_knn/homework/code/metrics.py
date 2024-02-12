@@ -8,7 +8,7 @@ def binary_classification_metrics(y_pred, y_true):
     y_pred, np array (num_samples) - model predictions
     y_true, np array (num_samples) - true labels
     Returns:
-    precision, recall, f1, accuracy - classification metrics
+    accuracy, precision, recall, f1 - classification metrics
     """
 
     # TODO: implement metrics!
@@ -16,10 +16,21 @@ def binary_classification_metrics(y_pred, y_true):
     # https://en.wikipedia.org/wiki/Precision_and_recall
     # https://en.wikipedia.org/wiki/F1_score
 
-    """
-    YOUR CODE IS HERE
-    """
-    pass
+    tp = np.sum((y_pred == 1) & (y_true == 1))
+    tn = np.sum((y_pred == 0) & (y_true == 0))
+    fp = np.sum((y_pred == 1) & (y_true == 0))
+    fn = np.sum((y_pred == 0) & (y_true == 1))
+
+    accuracy = (tp + tn) / (tp + tn + fp + fn)
+    precision = tp / (tp + fp) if (tp + fp) != 0 else 0
+    recall = tp / (tp + fn) if (tp + fn) != 0 else 0
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) != 0
+        else 0
+    )
+
+    return accuracy, precision, recall, f1
 
 
 def multiclass_accuracy(y_pred, y_true):
@@ -84,4 +95,3 @@ def mae(y_pred, y_true):
     YOUR CODE IS HERE
     """
     pass
-    

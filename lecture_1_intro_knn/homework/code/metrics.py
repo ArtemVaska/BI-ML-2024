@@ -21,16 +21,16 @@ def binary_classification_metrics(y_pred, y_true):
     fp = np.sum((y_pred == 1) & (y_true == 0))
     fn = np.sum((y_pred == 0) & (y_true == 1))
 
-    accuracy = (tp + tn) / (tp + tn + fp + fn)
-    precision = tp / (tp + fp) if (tp + fp) != 0 else 0
-    recall = tp / (tp + fn) if (tp + fn) != 0 else 0
-    f1 = (
-        2 * precision * recall / (precision + recall)
-        if (precision + recall) != 0
+    precision_score = tp / (tp + fp) if (tp + fp) != 0 else 0
+    recall_score = tp / (tp + fn) if (tp + fn) != 0 else 0
+    f1_score = (
+        2 * precision_score * recall_score / (precision_score + recall_score)
+        if (precision_score + recall_score) != 0
         else 0
     )
+    accuracy_score = (tp + tn) / (tp + tn + fp + fn)
 
-    return accuracy, precision, recall, f1
+    return precision_score, recall_score, f1_score, accuracy_score
 
 
 def multiclass_accuracy(y_pred, y_true):

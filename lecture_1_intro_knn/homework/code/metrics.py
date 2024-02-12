@@ -43,10 +43,9 @@ def multiclass_accuracy(y_pred, y_true):
     accuracy - ratio of accurate predictions to total samples
     """
 
-    """
-    YOUR CODE IS HERE
-    """
-    pass
+    accuracy = np.count_nonzero(y_pred == y_true) / len(y_true)
+
+    return accuracy
 
 
 def r_squared(y_pred, y_true):

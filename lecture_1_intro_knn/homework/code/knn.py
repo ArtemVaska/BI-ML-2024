@@ -137,15 +137,16 @@ class KNNClassifier:
         distances, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
         Returns:
-        pred, np array of int (num_test_samples) - predicted class index
+        prediction, np array of int (num_test_samples) - predicted class index
            for every test sample
         """
 
-        n_train = distances.shape[0]
         n_test = distances.shape[0]
-        prediction = np.zeros(n_test, np.int)
+        prediction = np.zeros(n_test)
 
-        """
-        YOUR CODE IS HERE
-        """
-        pass
+        for i in range(n_test):
+            indices_of_nearest_neighbors = np.argsort(distances[i])[: self.k]
+            count_classes = np.bincount(self.train_y[indices_of_nearest_neighbors])
+            prediction[i] = np.argmax(count_classes)
+
+        return prediction

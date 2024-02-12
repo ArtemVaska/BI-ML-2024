@@ -97,10 +97,15 @@ class KNNClassifier:
            with distances between each test and each train sample
         """
 
-        """
-        YOUR CODE IS HERE
-        """
-        pass
+        num_test = X.shape[0]
+        num_train = self.train_X.shape[0]
+
+        X = X.reshape(num_test, 1, -1)
+        train_X_reshaped = self.train_X.reshape(1, num_train, -1)
+
+        distances = np.sum(np.abs(X - train_X_reshaped), axis=2)
+
+        return distances
 
     def predict_labels_binary(self, distances):
         """

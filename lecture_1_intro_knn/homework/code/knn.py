@@ -15,7 +15,7 @@ class KNNClassifier:
 
     def predict(self, X, n_loops=0):
         """
-        Uses the KNN model to predict clases for the data samples provided
+        Uses the KNN model to predict classes for the data samples provided
 
         Arguments:
         X, np array (num_samples, num_features) - samples to run
@@ -30,7 +30,7 @@ class KNNClassifier:
         if n_loops == 0:
             distances = self.compute_distances_no_loops(X)
         elif n_loops == 1:
-            distances = self.compute_distances_one_loops(X)
+            distances = self.compute_distances_one_loop(X)
         else:
             distances = self.compute_distances_two_loops(X)
 
@@ -115,18 +115,19 @@ class KNNClassifier:
         distances, np array (num_test_samples, num_train_samples) - array
            with distances between each test and each train sample
         Returns:
-        pred, np array of bool (num_test_samples) - binary predictions
+        prediction, np array of bool (num_test_samples) - binary predictions
            for every test sample
         """
 
-        n_train = distances.shape[1]
         n_test = distances.shape[0]
         prediction = np.zeros(n_test)
 
-        """
-        YOUR CODE IS HERE
-        """
-        pass
+        for i in range(n_test):
+            indices_of_nearest_neighbors = np.argsort(distances[i])[: self.k]
+            count_1_class = np.sum(self.train_y[indices_of_nearest_neighbors] == 1)
+            prediction[i] = (count_1_class / self.k) > 0.5
+
+        return prediction
 
     def predict_labels_multiclass(self, distances):
         """

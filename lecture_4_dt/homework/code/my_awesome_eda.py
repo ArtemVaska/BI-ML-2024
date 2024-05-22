@@ -29,8 +29,8 @@ def define_types(df, category_threshold):
     return df_types
 
 
-def correlation_heatmap(df, features):
-    plt.figure(figsize=(6, 5))
+def correlation_heatmap(df, features, correlation_figsize):
+    plt.figure(figsize=correlation_figsize)
     sns.set(font_scale=1)
     sns.heatmap(df[features].corr(), annot=True, cmap="crest", fmt=".2f")
     plt.title("Correlation heatmap", fontsize=12, fontweight="bold")
@@ -40,7 +40,7 @@ def correlation_heatmap(df, features):
 
 
 def histogram_boxplot(df, feature):
-    plt.figure(figsize=(6, 3))
+    plt.figure(figsize=(8, 8))
     sns.set(style="whitegrid")
     plt.subplot(1, 2, 1)
     sns.histplot(df[feature], bins=30, color="#0077b6", ec="k")
@@ -72,12 +72,13 @@ def na_barplot(proportions):
     plt.show()
 
 
-def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
+def run_eda(df: pd.DataFrame, category_threshold=5, correlation_figsize=(6, 5)) -> None:
     """
     Launches EDA.
 
     :param df: table with data
     :param category_threshold: threshold for categorical variables
+    :param correlation_figsize: size of correlation heatmap
     :return: prints the EDA of the data to the stdout
     """
     # greeting
@@ -111,7 +112,7 @@ def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
     print(f"{tabulate(numerical_features_subset_stat, headers="keys", tablefmt="pretty", floatfmt=".2f")}\n")
 
     # correlation heatmap
-    correlation_heatmap(df, numerical_features_subset)
+    correlation_heatmap(df, numerical_features_subset, correlation_figsize)
 
     # outliers
     print(f"\nOutliers for numerical features:")

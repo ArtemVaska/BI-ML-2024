@@ -6,7 +6,7 @@ from tabulate import tabulate
 plt.rcParams.update({'font.weight': 'normal'})
 
 
-def define_types(df, category_threshold=5):
+def define_types(df, category_threshold):
     column_types = []
     for column in df.columns:
         if df[column].nunique() <= category_threshold:
@@ -72,19 +72,14 @@ def na_barplot(proportions):
     plt.show()
 
 
-def run_eda(df: pd.DataFrame) -> None:
+def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
     """
-    Prints various information about dataframe from input. Check README for more information.
+    Launches EDA.
 
-    Additional functions:
-        - fill_df_dtypes_dict
-        - process_factor_features
-        - process_numeric_features
-
-    :param df: a dataframe to analyze
-    :return: everything prints on the screen
+    :param df: table with data
+    :param category_threshold: threshold for categorical variables
+    :return: prints the EDA of the data to the stdout
     """
-
     # greeting
     print(f"Here is EDA for your dataframe ;)\n")
 
@@ -96,7 +91,7 @@ def run_eda(df: pd.DataFrame) -> None:
 
     # data types
     print(f"Data types:")
-    df_types = define_types(df)
+    df_types = define_types(df, category_threshold)
     categorical_features = df_types.query("type == 'categorical'").index
     numerical_features = df_types.query("type == 'numerical'").index
     print(tabulate(df_types, headers="keys", tablefmt="pretty", floatfmt=".2f", colalign=("left", "center")))

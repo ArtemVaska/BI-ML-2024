@@ -100,9 +100,13 @@ def run_eda(df: pd.DataFrame,
     # data types
     print(f"Data types:")
     df_types = define_types(df, category_threshold)
-    categorical_features = df_types.query("type == 'categorical'").index
     numerical_features = df_types.query("type == 'numerical'").index
+    categorical_features = df_types.query("type == 'categorical'").index
+    string_features = df_types.query("type == 'string'").index
     print(tabulate(df_types, headers="keys", tablefmt="pretty", floatfmt=".2f", colalign=("left", "center")))
+    print(f"\nString features: {string_features.tolist()}")
+    print(f"Categorical features: {categorical_features.tolist()}")
+    print(f"Numerical features: {numerical_features.tolist()}")
 
     # statistic for categorical features
     print(f"\nStatistics for categorical features:")

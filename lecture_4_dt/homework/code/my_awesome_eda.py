@@ -39,8 +39,8 @@ def correlation_heatmap(df, features, correlation_figsize):
     plt.show()
 
 
-def histogram_boxplot(df, feature):
-    plt.figure(figsize=(8, 8))
+def histogram_boxplot(df, feature, hist_box_figsize):
+    plt.figure(figsize=hist_box_figsize)
     sns.set(style="whitegrid")
     plt.subplot(1, 2, 1)
     sns.histplot(df[feature], bins=30, color="#0077b6", ec="k")
@@ -60,8 +60,8 @@ def histogram_boxplot(df, feature):
     plt.show()
 
 
-def na_barplot(proportions):
-    plt.figure(figsize=(5, 2.5))
+def na_barplot(proportions, barplot_figsize):
+    plt.figure(figsize=barplot_figsize)
     sns.set(style="whitegrid")
     sns.barplot(x=proportions.index, y=proportions, color="#0077b6", ec="k")
     plt.title("Proportion of missing values for each variable", fontsize=10, fontweight="bold")
@@ -72,13 +72,20 @@ def na_barplot(proportions):
     plt.show()
 
 
-def run_eda(df: pd.DataFrame, category_threshold=5, correlation_figsize=(6, 5)) -> None:
+def run_eda(df: pd.DataFrame,
+            category_threshold=5,
+            correlation_figsize=(6, 5),
+            hist_box_figsize=(8, 4),
+            barplot_figsize=(5, 2.5)
+            ) -> None:
     """
     Launches EDA.
 
     :param df: table with data
     :param category_threshold: threshold for categorical variables
     :param correlation_figsize: size of correlation heatmap
+    :param hist_box_figsize: size of histogram-boxplot
+    :param barplot_figsize: size of barplot with NAs
     :return: prints the EDA of the data to the stdout
     """
     # greeting
@@ -127,7 +134,7 @@ def run_eda(df: pd.DataFrame, category_threshold=5, correlation_figsize=(6, 5)) 
 
     # histograms and boxplots for each feature
     for feature in numerical_features_subset:
-        histogram_boxplot(df, feature)
+        histogram_boxplot(df, feature, hist_box_figsize)
 
     # NAs
     print(f"\nMissing values (NAs):")
@@ -140,7 +147,7 @@ def run_eda(df: pd.DataFrame, category_threshold=5, correlation_figsize=(6, 5)) 
 
     # plot proportion of missing values for each variable
     proportions = df.isnull().mean()
-    na_barplot(proportions)
+    na_barplot(proportions, barplot_figsize)
 
     # duplicates
     print(f"\nNumber of duplicates (rows): {df.duplicated().sum()}")

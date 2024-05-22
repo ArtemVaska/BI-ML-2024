@@ -29,8 +29,8 @@ def define_types(df, category_threshold):
     return df_types
 
 
-def correlation_heatmap(df, features):
-    plt.figure(figsize=(6, 5))
+def correlation_heatmap(df, features, correlation_figsize):
+    plt.figure(figsize=correlation_figsize)
     sns.set(font_scale=1)
     sns.heatmap(df[features].corr(), annot=True, cmap="crest", fmt=".2f")
     plt.title("Correlation heatmap", fontsize=12, fontweight="bold")
@@ -39,8 +39,8 @@ def correlation_heatmap(df, features):
     plt.show()
 
 
-def histogram_boxplot(df, feature):
-    plt.figure(figsize=(6, 3))
+def histogram_boxplot(df, feature, hist_box_figsize):
+    plt.figure(figsize=hist_box_figsize)
     sns.set(style="whitegrid")
     plt.subplot(1, 2, 1)
     sns.histplot(df[feature], bins=30, color="#0077b6", ec="k")
@@ -60,8 +60,8 @@ def histogram_boxplot(df, feature):
     plt.show()
 
 
-def na_barplot(proportions):
-    plt.figure(figsize=(5, 2.5))
+def na_barplot(proportions, barplot_figsize):
+    plt.figure(figsize=barplot_figsize)
     sns.set(style="whitegrid")
     sns.barplot(x=proportions.index, y=proportions, color="#0077b6", ec="k")
     plt.title("Proportion of missing values for each variable", fontsize=10, fontweight="bold")
@@ -72,12 +72,20 @@ def na_barplot(proportions):
     plt.show()
 
 
-def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
+def run_eda(df: pd.DataFrame,
+            category_threshold=5,
+            correlation_figsize=(6, 5),
+            hist_box_figsize=(8, 4),
+            barplot_figsize=(5, 2.5)
+            ) -> None:
     """
     Launches EDA.
 
     :param df: table with data
     :param category_threshold: threshold for categorical variables
+    :param correlation_figsize: size of correlation heatmap
+    :param hist_box_figsize: size of histogram-boxplot
+    :param barplot_figsize: size of barplot with NAs
     :return: prints the EDA of the data to the stdout
     """
     # greeting
@@ -92,9 +100,13 @@ def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
     # data types
     print(f"Data types:")
     df_types = define_types(df, category_threshold)
-    categorical_features = df_types.query("type == 'categorical'").index
     numerical_features = df_types.query("type == 'numerical'").index
+    categorical_features = df_types.query("type == 'categorical'").index
+    string_features = df_types.query("type == 'string'").index
     print(tabulate(df_types, headers="keys", tablefmt="pretty", floatfmt=".2f", colalign=("left", "center")))
+    print(f"\nString features: {string_features.tolist()}")
+    print(f"Categorical features: {categorical_features.tolist()}")
+    print(f"Numerical features: {numerical_features.tolist()}")
 
     # statistic for categorical features
     print(f"\nStatistics for categorical features:")
@@ -111,7 +123,7 @@ def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
     print(f"{tabulate(numerical_features_subset_stat, headers="keys", tablefmt="pretty", floatfmt=".2f")}\n")
 
     # correlation heatmap
-    correlation_heatmap(df, numerical_features_subset)
+    correlation_heatmap(df, numerical_features_subset, correlation_figsize)
 
     # outliers
     print(f"\nOutliers for numerical features:")
@@ -126,7 +138,7 @@ def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
 
     # histograms and boxplots for each feature
     for feature in numerical_features_subset:
-        histogram_boxplot(df, feature)
+        histogram_boxplot(df, feature, hist_box_figsize)
 
     # NAs
     print(f"\nMissing values (NAs):")
@@ -139,7 +151,7 @@ def run_eda(df: pd.DataFrame, category_threshold=5) -> None:
 
     # plot proportion of missing values for each variable
     proportions = df.isnull().mean()
-    na_barplot(proportions)
+    na_barplot(proportions, barplot_figsize)
 
     # duplicates
     print(f"\nNumber of duplicates (rows): {df.duplicated().sum()}")
